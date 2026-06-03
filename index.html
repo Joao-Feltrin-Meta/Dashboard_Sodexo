@@ -1,6 +1,12 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Sodexo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap');
   :root {
     --sdx-navy: #1B1F8A;
     --sdx-red: #E63027;
@@ -12,153 +18,266 @@
     --sdx-done: #1B8A4A;
     --sdx-active: #1B6F8A;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  .db-root { font-family: 'Figtree', sans-serif; color: var(--sdx-text); background: transparent; padding: 0 0 2rem; }
 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Figtree', sans-serif;
+    color: var(--sdx-text);
+    background: #eef0fb;
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+  }
+
+  .db-root {
+    max-width: 960px;
+    margin: 0 auto;
+    background: transparent;
+  }
+
+  /* ── HEADER ── */
   .db-header {
     background: var(--sdx-navy);
-    padding: 18px 24px 16px;
+    padding: 20px 28px 18px;
     display: flex;
     align-items: center;
-    gap: 14px;
-    border-radius: 12px 12px 0 0;
+    gap: 16px;
+    border-radius: 14px 14px 0 0;
   }
   .db-logo {
-    width: 36px; height: 36px;
+    width: 40px; height: 40px;
     background: var(--sdx-red);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: white; line-height: 1;
     flex-shrink: 0;
   }
-  .db-logo::after { content: '★'; font-size: 18px; color: white; line-height: 1; }
-  .db-title { color: white; font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
+  .db-title { color: white; font-size: 18px; font-weight: 600; letter-spacing: 0.01em; }
 
-  .db-section { background: var(--sdx-light); padding: 0 16px 16px; }
+  /* ── SECTIONS ── */
+  .db-section {
+    background: var(--sdx-light);
+    padding: 0 20px 20px;
+  }
+  .db-section:last-of-type { border-radius: 0 0 14px 14px; padding-bottom: 24px; }
+
   .section-title {
-    font-size: 12px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.08em;
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.09em;
     color: var(--sdx-navy);
-    padding: 14px 0 10px;
-    display: flex; align-items: center; gap: 8px;
+    padding: 18px 0 12px;
+    display: flex; align-items: center; gap: 10px;
   }
   .section-title::after { content: ''; flex: 1; height: 1px; background: var(--sdx-border); }
 
-  .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  /* ── PROJECT CARDS ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
   .proj-card {
-    background: white; border-radius: 10px;
-    border: 1px solid var(--sdx-border); padding: 14px 16px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--sdx-border);
+    padding: 16px 18px;
   }
   .proj-card-header {
     display: flex; align-items: flex-start;
-    justify-content: space-between; gap: 8px; margin-bottom: 8px;
+    justify-content: space-between; gap: 10px; margin-bottom: 10px;
   }
   .proj-id { font-size: 10px; color: var(--sdx-text2); font-weight: 500; }
-  .proj-name { font-size: 13px; font-weight: 600; color: var(--sdx-navy); margin-top: 2px; line-height: 1.3; }
-  .status-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
-  .s-done { background: #e8f7ed; color: #1B8A4A; }
-  .s-warn { background: #fff3e0; color: #e65100; }
-  .proj-meta { font-size: 11px; color: var(--sdx-text2); line-height: 1.6; }
+  .proj-name { font-size: 13px; font-weight: 600; color: var(--sdx-navy); margin-top: 2px; line-height: 1.35; }
+  .status-badge {
+    font-size: 10px; font-weight: 600;
+    padding: 3px 9px; border-radius: 20px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .s-done    { background: #e8f7ed; color: #1B8A4A; }
+  .s-active  { background: #e8f2f7; color: #1B6F8A; }
+  .s-warn    { background: #fff3e0; color: #e65100; }
+  .proj-meta { font-size: 11px; color: var(--sdx-text2); line-height: 1.7; }
   .proj-meta strong { color: var(--sdx-text); font-weight: 500; }
-  .proj-bar-wrap { margin-top: 10px; background: var(--sdx-muted); border-radius: 4px; height: 5px; overflow: hidden; }
+  .proj-bar-wrap {
+    margin-top: 12px;
+    background: var(--sdx-muted);
+    border-radius: 4px; height: 5px; overflow: hidden;
+  }
   .proj-bar { height: 100%; border-radius: 4px; }
-  .proj-bar.red { background: var(--sdx-red); }
-  .proj-bar.green { background: var(--sdx-done); }
-  .proj-bar.blue { background: var(--sdx-active); }
+  .pb-red   { background: var(--sdx-red); }
+  .pb-green { background: var(--sdx-done); }
+  .pb-blue  { background: var(--sdx-active); }
 
-  .gantt-wrap { background: white; border-radius: 10px; border: 1px solid var(--sdx-border); overflow-x: auto; }
+  /* ── GANTT ── */
+  .gantt-legend {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    padding: 0 0 14px;
+  }
+  .gl-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11px; font-weight: 500;
+    color: var(--sdx-text2);
+    padding: 5px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--sdx-border);
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .gl-item:hover { border-color: var(--sdx-navy); color: var(--sdx-navy); background: var(--sdx-light); }
+  .gl-item.active { border-color: var(--sdx-navy); background: var(--sdx-navy); color: white; }
+  .gl-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .gl-line { width: 3px; height: 11px; border-radius: 0; flex-shrink: 0; }
+
+  .gantt-outer {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--sdx-border);
+    overflow-x: auto;
+  }
   .gantt-head {
-    display: grid; grid-template-columns: 190px 1fr;
+    display: grid; grid-template-columns: 200px 1fr;
     border-bottom: 1px solid var(--sdx-border);
-    padding: 10px 14px 8px;
+    padding: 10px 16px 8px;
     background: var(--sdx-light);
     border-radius: 10px 10px 0 0;
     font-size: 11px; font-weight: 600; color: var(--sdx-navy);
+    min-width: 700px;
   }
   .gantt-months { display: grid; grid-template-columns: repeat(12,1fr); }
   .gantt-month { text-align: center; font-size: 10px; }
   .gantt-month.now { color: var(--sdx-red); font-weight: 700; }
+
   .gantt-row {
-    display: grid; grid-template-columns: 190px 1fr;
-    align-items: center; border-bottom: 1px solid var(--sdx-muted);
-    padding: 0 14px; min-height: 36px;
+    display: grid; grid-template-columns: 200px 1fr;
+    align-items: center;
+    border-bottom: 1px solid var(--sdx-muted);
+    padding: 0 16px; min-height: 40px;
+    cursor: pointer;
+    transition: background 0.12s;
+    min-width: 700px;
   }
   .gantt-row:last-child { border-bottom: none; }
-  .g-label { font-size: 11px; color: var(--sdx-text); padding: 5px 0; line-height: 1.3; }
-  .g-label small { display: block; font-size: 10px; color: var(--sdx-text2); }
-  .g-track { position: relative; height: 24px; }
+  .gantt-row:hover { background: #f0f1fb; }
+
+  .g-label {
+    font-size: 11px; color: var(--sdx-text);
+    padding: 6px 8px 6px 0; line-height: 1.35;
+    transition: opacity 0.2s;
+  }
+  .g-label small { display: block; font-size: 10px; color: var(--sdx-text2); margin-top: 1px; }
+
+  .g-track { position: relative; height: 26px; }
   .g-bar {
-    position: absolute; top: 5px; height: 14px; border-radius: 3px;
-    display: flex; align-items: center; padding: 0 5px;
+    position: absolute; top: 6px; height: 14px;
+    border-radius: 3px;
+    display: flex; align-items: center; padding: 0 7px;
     font-size: 9px; font-weight: 600; color: white;
     white-space: nowrap; overflow: hidden;
+    transition: opacity 0.2s, filter 0.2s;
   }
-  .g-bar.done { background: var(--sdx-done); }
-  .g-bar.active { background: var(--sdx-navy); }
-  .g-bar.warn { background: #e65100; }
-  .g-bar.backlog { background: #8a8aaa; }
-  .g-bar.backlog2 { background: #5a5a8a; }
-  .g-today { position: absolute; top: 0; bottom: 0; width: 1.5px; background: var(--sdx-red); opacity: 0.7; }
-  .g-col-shade {
+  .gb-done     { background: var(--sdx-done); }
+  .gb-active   { background: var(--sdx-navy); }
+  .gb-warn     { background: #e65100; }
+  .gb-backlog  { background: #8a8aaa; }
+  .gb-backlog2 { background: #5a5a8a; }
+
+  .g-today {
     position: absolute; top: 0; bottom: 0;
-    background: rgba(27,31,138,0.04);
+    width: 2px; background: var(--sdx-red); opacity: 0.75;
     pointer-events: none;
   }
 
-  .backlog-table { background: white; border-radius: 10px; border: 1px solid var(--sdx-border); overflow: hidden; }
+  /* hover/filter states */
+  .gantt-outer.has-hover .gantt-row:not(.hovered) .g-label { opacity: 0.2; }
+  .gantt-outer.has-hover .gantt-row:not(.hovered) .g-bar   { opacity: 0.15; filter: saturate(0.2); }
+  .gantt-outer.has-hover .gantt-row.hovered .g-bar         { opacity: 1; filter: none; }
+  .gantt-outer.has-hover .gantt-row.hovered .g-label       { opacity: 1; }
+
+  .gantt-note { padding: 8px 16px 4px; font-size: 10px; color: var(--sdx-text2); }
+
+  /* ── BACKLOG TABLE ── */
+  .backlog-wrap {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--sdx-border);
+    overflow: hidden;
+    overflow-x: auto;
+  }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th {
+  thead th {
     background: var(--sdx-navy); color: white;
     font-size: 10px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    padding: 8px 12px; text-align: left;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 9px 14px; text-align: left;
+    white-space: nowrap;
   }
-  td { padding: 9px 12px; border-bottom: 1px solid var(--sdx-muted); color: var(--sdx-text); vertical-align: top; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--sdx-light); }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--sdx-muted);
+    color: var(--sdx-text); vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--sdx-light); }
   .val-chip {
-    display: inline-block; background: var(--sdx-light); color: var(--sdx-navy);
-    border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 600;
+    display: inline-block;
+    background: var(--sdx-light); color: var(--sdx-navy);
+    border-radius: 4px; padding: 2px 7px;
+    font-size: 10px; font-weight: 600;
     border: 1px solid var(--sdx-border);
+    white-space: nowrap;
   }
 
-  .next-steps { background: white; border-radius: 10px; border: 1px solid var(--sdx-border); padding: 14px 16px; }
-  .step-item { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--sdx-muted); align-items: flex-start; font-size: 12px; }
+  /* ── NEXT STEPS ── */
+  .next-steps {
+    background: white; border-radius: 10px;
+    border: 1px solid var(--sdx-border); padding: 16px 18px;
+  }
+  .step-item {
+    display: flex; gap: 12px; padding: 8px 0;
+    border-bottom: 1px solid var(--sdx-muted);
+    align-items: flex-start; font-size: 12px;
+  }
   .step-item:last-child { border-bottom: none; }
-  .step-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-top: 1px; }
-  .dot-red { background: #fde8e8; color: var(--sdx-red); }
-  .dot-blue { background: #e8f2f7; color: var(--sdx-active); }
-  .dot-navy { background: #e8e9f7; color: var(--sdx-navy); }
-  .step-text { color: var(--sdx-text); line-height: 1.5; }
+  .step-dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    flex-shrink: 0; display: flex; align-items: center;
+    justify-content: center; font-size: 10px; font-weight: 700;
+    margin-top: 1px;
+  }
+  .dot-red   { background: #fde8e8; color: var(--sdx-red); }
+  .dot-blue  { background: #e8f2f7; color: var(--sdx-active); }
+  .dot-navy  { background: #e8e9f7; color: var(--sdx-navy); }
+  .step-text { color: var(--sdx-text); line-height: 1.55; }
   .step-text em { color: var(--sdx-red); font-style: normal; font-weight: 600; }
 
+  /* ── FOOTER ── */
   .db-footer {
-    background: var(--sdx-navy); border-radius: 0 0 12px 12px;
-    padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+    background: var(--sdx-navy);
+    border-radius: 0 0 14px 14px;
+    padding: 12px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 6px;
   }
-  .db-footer span { color: rgba(255,255,255,0.5); font-size: 10px; }
+  .db-footer span { color: rgba(255,255,255,0.45); font-size: 10px; }
   .db-footer strong { color: rgba(255,255,255,0.9); font-size: 11px; }
-
-  .gantt-legend {
-    display: flex; gap: 16px; flex-wrap: wrap;
-    padding: 10px 14px 0;
-    font-size: 10px; color: var(--sdx-text2);
-  }
-  .gl-item { display: flex; align-items: center; gap: 5px; }
-  .gl-dot { width: 10px; height: 10px; border-radius: 2px; }
 </style>
-
-<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Dashboard Sodexo – automações em andamento, concluídas, roadmap Gantt e backlog priorizado</h2>
-
+</head>
+<body>
 <div class="db-root">
 
+  <!-- HEADER -->
   <div class="db-header">
-    <div class="db-logo"></div>
+    <div class="db-logo">★</div>
     <div class="db-title">Dashboard — Sodexo</div>
   </div>
 
+  <!-- EM ANDAMENTO -->
   <div class="db-section">
     <div class="section-title">Em andamento</div>
     <div class="cards-grid">
+
       <div class="proj-card">
         <div class="proj-card-header">
           <div>
@@ -172,8 +291,9 @@
           <strong>Correção PRD:</strong> 10/06/2025<br>
           <strong>Tech:</strong> UiPath · SP, Jundiaí, Porto Alegre
         </div>
-        <div class="proj-bar-wrap"><div class="proj-bar red" style="width:85%"></div></div>
+        <div class="proj-bar-wrap"><div class="proj-bar pb-red" style="width:85%"></div></div>
       </div>
+
       <div class="proj-card">
         <div class="proj-card-header">
           <div>
@@ -187,14 +307,17 @@
           <strong>Bloqueio:</strong> OneDrive VM + TCS + NL PRD<br>
           <strong>Tech:</strong> UiPath · NL Web
         </div>
-        <div class="proj-bar-wrap"><div class="proj-bar blue" style="width:72%"></div></div>
+        <div class="proj-bar-wrap"><div class="proj-bar pb-blue" style="width:72%"></div></div>
       </div>
+
     </div>
   </div>
 
+  <!-- CONCLUÍDOS RECENTES -->
   <div class="db-section">
     <div class="section-title">Concluídos recentes</div>
     <div class="cards-grid">
+
       <div class="proj-card">
         <div class="proj-card-header">
           <div>
@@ -207,8 +330,9 @@
           <strong>Deploy:</strong> 06/03 · <strong>Hypercare até:</strong> 12/03<br>
           Monitoramento robô inventário R2R, relatórios envio/retorno
         </div>
-        <div class="proj-bar-wrap"><div class="proj-bar green" style="width:100%"></div></div>
+        <div class="proj-bar-wrap"><div class="proj-bar pb-green" style="width:100%"></div></div>
       </div>
+
       <div class="proj-card">
         <div class="proj-card-header">
           <div>
@@ -221,8 +345,9 @@
           <strong>Deploy:</strong> 03/03 · <strong>Hypercare até:</strong> 11/03<br>
           Atualização automática parcelas + incorporação de NDs
         </div>
-        <div class="proj-bar-wrap"><div class="proj-bar green" style="width:100%"></div></div>
+        <div class="proj-bar-wrap"><div class="proj-bar pb-green" style="width:100%"></div></div>
       </div>
+
       <div class="proj-card">
         <div class="proj-card-header">
           <div>
@@ -235,22 +360,38 @@
           <strong>Deploy:</strong> 19/02 · <strong>Hypercare até:</strong> 25/02<br>
           Condicional de retentativa no fluxo R01
         </div>
-        <div class="proj-bar-wrap"><div class="proj-bar green" style="width:100%"></div></div>
+        <div class="proj-bar-wrap"><div class="proj-bar pb-green" style="width:100%"></div></div>
       </div>
+
     </div>
   </div>
 
+  <!-- GANTT -->
   <div class="db-section">
     <div class="section-title">Roadmap / Gantt estimado</div>
-    <div class="gantt-legend">
-      <div class="gl-item"><div class="gl-dot" style="background:var(--sdx-done)"></div> Concluído</div>
-      <div class="gl-item"><div class="gl-dot" style="background:var(--sdx-navy)"></div> Em andamento</div>
-      <div class="gl-item"><div class="gl-dot" style="background:#e65100"></div> Com impedimento</div>
-      <div class="gl-item"><div class="gl-dot" style="background:#8a8aaa"></div> Backlog (estimativa)</div>
-      <div class="gl-item"><div class="gl-dot" style="background:#5a5a8a"></div> Backlog (prioritário)</div>
-      <div class="gl-item"><div class="gl-dot" style="background:var(--sdx-red);width:4px;border-radius:0"></div> Hoje</div>
+
+    <div class="gantt-legend" id="legend">
+      <div class="gl-item" data-filter="done">
+        <div class="gl-dot" style="background:var(--sdx-done)"></div> Concluído
+      </div>
+      <div class="gl-item" data-filter="active">
+        <div class="gl-dot" style="background:var(--sdx-navy)"></div> Em andamento
+      </div>
+      <div class="gl-item" data-filter="warn">
+        <div class="gl-dot" style="background:#e65100"></div> Com impedimento
+      </div>
+      <div class="gl-item" data-filter="backlog">
+        <div class="gl-dot" style="background:#8a8aaa"></div> Backlog
+      </div>
+      <div class="gl-item" data-filter="backlog2">
+        <div class="gl-dot" style="background:#5a5a8a"></div> Backlog prioritário
+      </div>
+      <div class="gl-item" data-filter="today">
+        <div class="gl-line" style="background:var(--sdx-red)"></div> Hoje
+      </div>
     </div>
-    <div class="gantt-wrap" style="margin-top:10px">
+
+    <div class="gantt-outer" id="ganttWrap">
       <div class="gantt-head">
         <div></div>
         <div class="gantt-months">
@@ -269,85 +410,94 @@
         </div>
       </div>
 
-      <div class="gantt-row">
+      <div class="gantt-row" data-type="done">
         <div class="g-label">R01 – Retentativas<small>#53970 · Concluído</small></div>
         <div class="g-track">
-          <div class="g-bar done" style="left:0%;width:15%">Deploy 19/02</div>
+          <div class="g-bar gb-done" style="left:0%;width:15%">Deploy 19/02</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="done">
         <div class="g-label">R05 – Recorrência<small>#52984 · Concluído</small></div>
         <div class="g-track">
-          <div class="g-bar done" style="left:3%;width:16%">Deploy 03/03</div>
+          <div class="g-bar gb-done" style="left:3%;width:16%">Deploy 03/03</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="done">
         <div class="g-label">R07 – Relatórios RM<small>#52983 · Concluído</small></div>
         <div class="g-track">
-          <div class="g-bar done" style="left:5%;width:15%">Deploy 06/03</div>
+          <div class="g-bar gb-done" style="left:5%;width:15%">Deploy 06/03</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="warn">
         <div class="g-label">R14 – Obrig. Rescisórias<small>#53965 · Fix 10/06</small></div>
         <div class="g-track">
-          <div class="g-bar warn" style="left:29%;width:11%">Fix 10/06</div>
+          <div class="g-bar gb-warn" style="left:29%;width:11%">Fix 10/06</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="active">
         <div class="g-label">R18 – Boleto aos Pais<small>#53966 · Deploy 09/06</small></div>
         <div class="g-track">
-          <div class="g-bar active" style="left:29%;width:10%">Deploy 09/06</div>
+          <div class="g-bar gb-active" style="left:29%;width:10%">Deploy 09/06</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="backlog">
         <div class="g-label">RM 2.0 R07 – Planilhas<small>#53968 · Backlog</small></div>
         <div class="g-track">
-          <div class="g-bar backlog" style="left:37%;width:16%">Escopo a definir</div>
+          <div class="g-bar gb-backlog" style="left:37%;width:16%">Escopo a definir</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="backlog">
         <div class="g-label">R19 – Controles Internos<small>#53971 · Backlog</small></div>
         <div class="g-track">
-          <div class="g-bar backlog" style="left:41%;width:25%">Rydoo + OCR + fiscal</div>
+          <div class="g-bar gb-backlog" style="left:41%;width:25%">Rydoo + OCR + fiscal</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="backlog2">
         <div class="g-label">R05 – Refat. O2C NDs<small>#53969 · ~3 meses</small></div>
         <div class="g-track">
-          <div class="g-bar backlog2" style="left:45%;width:24%">5 sprints · R$ 32.867</div>
+          <div class="g-bar gb-backlog2" style="left:45%;width:24%">5 sprints · R$ 32.867</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="backlog2">
         <div class="g-label">R07 – Refat. Inventário<small>Backlog · ~3 meses</small></div>
         <div class="g-track">
-          <div class="g-bar backlog2" style="left:54%;width:24%">5 sprints · R$ 44.934</div>
+          <div class="g-bar gb-backlog2" style="left:54%;width:24%">5 sprints · R$ 44.934</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
-      <div class="gantt-row">
+
+      <div class="gantt-row" data-type="backlog2">
         <div class="g-label">R01 – Refatoração completa<small>#53972 · ~4 meses</small></div>
         <div class="g-track">
-          <div class="g-bar backlog2" style="left:62%;width:34%">7 sprints · R$ 93.096 · até Jan+</div>
+          <div class="g-bar gb-backlog2" style="left:62%;width:34%">7 sprints · R$ 93.096 · até Jan+</div>
           <div class="g-today" style="left:33%"></div>
         </div>
       </div>
+
     </div>
-    <div style="padding: 6px 14px 2px; font-size: 10px; color: var(--sdx-text2);">
-      ◂ Linha vermelha = hoje (Jun/2026) · Datas de backlog são estimativas baseadas nas propostas aprovadas
-    </div>
+    <div class="gantt-note">◂ Linha vermelha = hoje (Jun/2026) · Datas de backlog são estimativas baseadas nas propostas aprovadas</div>
   </div>
 
+  <!-- BACKLOG -->
   <div class="db-section">
     <div class="section-title">Backlog priorizado</div>
-    <div class="backlog-table">
+    <div class="backlog-wrap">
       <table>
         <thead>
           <tr>
@@ -405,6 +555,7 @@
     </div>
   </div>
 
+  <!-- PRÓXIMOS PASSOS -->
   <div class="db-section">
     <div class="section-title">Próximos passos e ações pendentes</div>
     <div class="next-steps">
@@ -435,9 +586,72 @@
     </div>
   </div>
 
+  <!-- FOOTER -->
   <div class="db-footer">
     <span>Insi — Digital. Simple. Human.</span>
     <strong>Sodexo Brasil · 2026</strong>
   </div>
 
 </div>
+
+<script>
+  const wrap = document.getElementById('ganttWrap');
+  const rows = Array.from(wrap.querySelectorAll('.gantt-row'));
+  const legendItems = Array.from(document.querySelectorAll('#legend .gl-item'));
+  let activeFilter = null;
+
+  function applyFilter(filter) {
+    if (!filter || filter === 'today') {
+      wrap.classList.remove('has-hover');
+      rows.forEach(r => r.classList.remove('hovered'));
+      return;
+    }
+    wrap.classList.add('has-hover');
+    rows.forEach(r => {
+      if (r.dataset.type === filter) {
+        r.classList.add('hovered');
+      } else {
+        r.classList.remove('hovered');
+      }
+    });
+  }
+
+  legendItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      applyFilter(item.dataset.filter);
+    });
+    item.addEventListener('mouseleave', () => {
+      applyFilter(activeFilter);
+    });
+    item.addEventListener('click', () => {
+      const f = item.dataset.filter;
+      if (f === 'today') return;
+      if (activeFilter === f) {
+        activeFilter = null;
+        legendItems.forEach(i => i.classList.remove('active'));
+        applyFilter(null);
+      } else {
+        activeFilter = f;
+        legendItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        applyFilter(f);
+      }
+    });
+  });
+
+  rows.forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      if (activeFilter) return;
+      wrap.classList.add('has-hover');
+      rows.forEach(r => r.classList.remove('hovered'));
+      row.classList.add('hovered');
+    });
+    row.addEventListener('mouseleave', () => {
+      if (activeFilter) return;
+      row.classList.remove('hovered');
+      wrap.classList.remove('has-hover');
+    });
+  });
+</script>
+</body>
+</html>
