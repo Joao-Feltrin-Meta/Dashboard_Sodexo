@@ -1,0 +1,443 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap');
+  :root {
+    --sdx-navy: #1B1F8A;
+    --sdx-red: #E63027;
+    --sdx-light: #f4f5ff;
+    --sdx-muted: #e8e9f7;
+    --sdx-text: #1a1a2e;
+    --sdx-text2: #4a4a7a;
+    --sdx-border: rgba(27,31,138,0.15);
+    --sdx-done: #1B8A4A;
+    --sdx-active: #1B6F8A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .db-root { font-family: 'Figtree', sans-serif; color: var(--sdx-text); background: transparent; padding: 0 0 2rem; }
+
+  .db-header {
+    background: var(--sdx-navy);
+    padding: 18px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-radius: 12px 12px 0 0;
+  }
+  .db-logo {
+    width: 36px; height: 36px;
+    background: var(--sdx-red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .db-logo::after { content: '★'; font-size: 18px; color: white; line-height: 1; }
+  .db-title { color: white; font-size: 17px; font-weight: 600; letter-spacing: 0.01em; }
+
+  .db-section { background: var(--sdx-light); padding: 0 16px 16px; }
+  .section-title {
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--sdx-navy);
+    padding: 14px 0 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--sdx-border); }
+
+  .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .proj-card {
+    background: white; border-radius: 10px;
+    border: 1px solid var(--sdx-border); padding: 14px 16px;
+  }
+  .proj-card-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 8px; margin-bottom: 8px;
+  }
+  .proj-id { font-size: 10px; color: var(--sdx-text2); font-weight: 500; }
+  .proj-name { font-size: 13px; font-weight: 600; color: var(--sdx-navy); margin-top: 2px; line-height: 1.3; }
+  .status-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  .s-done { background: #e8f7ed; color: #1B8A4A; }
+  .s-warn { background: #fff3e0; color: #e65100; }
+  .proj-meta { font-size: 11px; color: var(--sdx-text2); line-height: 1.6; }
+  .proj-meta strong { color: var(--sdx-text); font-weight: 500; }
+  .proj-bar-wrap { margin-top: 10px; background: var(--sdx-muted); border-radius: 4px; height: 5px; overflow: hidden; }
+  .proj-bar { height: 100%; border-radius: 4px; }
+  .proj-bar.red { background: var(--sdx-red); }
+  .proj-bar.green { background: var(--sdx-done); }
+  .proj-bar.blue { background: var(--sdx-active); }
+
+  .gantt-wrap { background: white; border-radius: 10px; border: 1px solid var(--sdx-border); overflow-x: auto; }
+  .gantt-head {
+    display: grid; grid-template-columns: 190px 1fr;
+    border-bottom: 1px solid var(--sdx-border);
+    padding: 10px 14px 8px;
+    background: var(--sdx-light);
+    border-radius: 10px 10px 0 0;
+    font-size: 11px; font-weight: 600; color: var(--sdx-navy);
+  }
+  .gantt-months { display: grid; grid-template-columns: repeat(12,1fr); }
+  .gantt-month { text-align: center; font-size: 10px; }
+  .gantt-month.now { color: var(--sdx-red); font-weight: 700; }
+  .gantt-row {
+    display: grid; grid-template-columns: 190px 1fr;
+    align-items: center; border-bottom: 1px solid var(--sdx-muted);
+    padding: 0 14px; min-height: 36px;
+  }
+  .gantt-row:last-child { border-bottom: none; }
+  .g-label { font-size: 11px; color: var(--sdx-text); padding: 5px 0; line-height: 1.3; }
+  .g-label small { display: block; font-size: 10px; color: var(--sdx-text2); }
+  .g-track { position: relative; height: 24px; }
+  .g-bar {
+    position: absolute; top: 5px; height: 14px; border-radius: 3px;
+    display: flex; align-items: center; padding: 0 5px;
+    font-size: 9px; font-weight: 600; color: white;
+    white-space: nowrap; overflow: hidden;
+  }
+  .g-bar.done { background: var(--sdx-done); }
+  .g-bar.active { background: var(--sdx-navy); }
+  .g-bar.warn { background: #e65100; }
+  .g-bar.backlog { background: #8a8aaa; }
+  .g-bar.backlog2 { background: #5a5a8a; }
+  .g-today { position: absolute; top: 0; bottom: 0; width: 1.5px; background: var(--sdx-red); opacity: 0.7; }
+  .g-col-shade {
+    position: absolute; top: 0; bottom: 0;
+    background: rgba(27,31,138,0.04);
+    pointer-events: none;
+  }
+
+  .backlog-table { background: white; border-radius: 10px; border: 1px solid var(--sdx-border); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    background: var(--sdx-navy); color: white;
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 8px 12px; text-align: left;
+  }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--sdx-muted); color: var(--sdx-text); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--sdx-light); }
+  .val-chip {
+    display: inline-block; background: var(--sdx-light); color: var(--sdx-navy);
+    border-radius: 4px; padding: 1px 6px; font-size: 10px; font-weight: 600;
+    border: 1px solid var(--sdx-border);
+  }
+
+  .next-steps { background: white; border-radius: 10px; border: 1px solid var(--sdx-border); padding: 14px 16px; }
+  .step-item { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--sdx-muted); align-items: flex-start; font-size: 12px; }
+  .step-item:last-child { border-bottom: none; }
+  .step-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; margin-top: 1px; }
+  .dot-red { background: #fde8e8; color: var(--sdx-red); }
+  .dot-blue { background: #e8f2f7; color: var(--sdx-active); }
+  .dot-navy { background: #e8e9f7; color: var(--sdx-navy); }
+  .step-text { color: var(--sdx-text); line-height: 1.5; }
+  .step-text em { color: var(--sdx-red); font-style: normal; font-weight: 600; }
+
+  .db-footer {
+    background: var(--sdx-navy); border-radius: 0 0 12px 12px;
+    padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .db-footer span { color: rgba(255,255,255,0.5); font-size: 10px; }
+  .db-footer strong { color: rgba(255,255,255,0.9); font-size: 11px; }
+
+  .gantt-legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    padding: 10px 14px 0;
+    font-size: 10px; color: var(--sdx-text2);
+  }
+  .gl-item { display: flex; align-items: center; gap: 5px; }
+  .gl-dot { width: 10px; height: 10px; border-radius: 2px; }
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Dashboard Sodexo – automações em andamento, concluídas, roadmap Gantt e backlog priorizado</h2>
+
+<div class="db-root">
+
+  <div class="db-header">
+    <div class="db-logo"></div>
+    <div class="db-title">Dashboard — Sodexo</div>
+  </div>
+
+  <div class="db-section">
+    <div class="section-title">Em andamento</div>
+    <div class="cards-grid">
+      <div class="proj-card">
+        <div class="proj-card-header">
+          <div>
+            <div class="proj-id">#53965 · Finance</div>
+            <div class="proj-name">R14 – Obrigações Rescisórias</div>
+          </div>
+          <span class="status-badge s-warn">⚠ Replanejado</span>
+        </div>
+        <div class="proj-meta">
+          <strong>Deploy:</strong> 02/06 · Erro em Jundiaí (novo botão login)<br>
+          <strong>Correção PRD:</strong> 10/06/2025<br>
+          <strong>Tech:</strong> UiPath · SP, Jundiaí, Porto Alegre
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar red" style="width:85%"></div></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-card-header">
+          <div>
+            <div class="proj-id">#53966 · Education</div>
+            <div class="proj-name">R18 – Boleto aos Pais</div>
+          </div>
+          <span class="status-badge s-warn">⚠ Replanejado</span>
+        </div>
+        <div class="proj-meta">
+          <strong>Deploy:</strong> 09/06/2025 (postergado)<br>
+          <strong>Bloqueio:</strong> OneDrive VM + TCS + NL PRD<br>
+          <strong>Tech:</strong> UiPath · NL Web
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar blue" style="width:72%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="db-section">
+    <div class="section-title">Concluídos recentes</div>
+    <div class="cards-grid">
+      <div class="proj-card">
+        <div class="proj-card-header">
+          <div>
+            <div class="proj-id">#52983 · Finance</div>
+            <div class="proj-name">R07 – RM Relatórios e Planilha de Controle</div>
+          </div>
+          <span class="status-badge s-done">✓ Done</span>
+        </div>
+        <div class="proj-meta">
+          <strong>Deploy:</strong> 06/03 · <strong>Hypercare até:</strong> 12/03<br>
+          Monitoramento robô inventário R2R, relatórios envio/retorno
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar green" style="width:100%"></div></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-card-header">
+          <div>
+            <div class="proj-id">#52984 · Finance</div>
+            <div class="proj-name">R05 – RM Planilha Recorrência Mensal</div>
+          </div>
+          <span class="status-badge s-done">✓ Done</span>
+        </div>
+        <div class="proj-meta">
+          <strong>Deploy:</strong> 03/03 · <strong>Hypercare até:</strong> 11/03<br>
+          Atualização automática parcelas + incorporação de NDs
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar green" style="width:100%"></div></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-card-header">
+          <div>
+            <div class="proj-id">#53970 · Finance</div>
+            <div class="proj-name">R01 – RM Ajustes Retentativas Extrato Caixa</div>
+          </div>
+          <span class="status-badge s-done">✓ Done</span>
+        </div>
+        <div class="proj-meta">
+          <strong>Deploy:</strong> 19/02 · <strong>Hypercare até:</strong> 25/02<br>
+          Condicional de retentativa no fluxo R01
+        </div>
+        <div class="proj-bar-wrap"><div class="proj-bar green" style="width:100%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="db-section">
+    <div class="section-title">Roadmap / Gantt estimado</div>
+    <div class="gantt-legend">
+      <div class="gl-item"><div class="gl-dot" style="background:var(--sdx-done)"></div> Concluído</div>
+      <div class="gl-item"><div class="gl-dot" style="background:var(--sdx-navy)"></div> Em andamento</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#e65100"></div> Com impedimento</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#8a8aaa"></div> Backlog (estimativa)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#5a5a8a"></div> Backlog (prioritário)</div>
+      <div class="gl-item"><div class="gl-dot" style="background:var(--sdx-red);width:4px;border-radius:0"></div> Hoje</div>
+    </div>
+    <div class="gantt-wrap" style="margin-top:10px">
+      <div class="gantt-head">
+        <div></div>
+        <div class="gantt-months">
+          <div class="gantt-month">Fev</div>
+          <div class="gantt-month">Mar</div>
+          <div class="gantt-month">Abr</div>
+          <div class="gantt-month">Mai</div>
+          <div class="gantt-month now">Jun ◂</div>
+          <div class="gantt-month">Jul</div>
+          <div class="gantt-month">Ago</div>
+          <div class="gantt-month">Set</div>
+          <div class="gantt-month">Out</div>
+          <div class="gantt-month">Nov</div>
+          <div class="gantt-month">Dez</div>
+          <div class="gantt-month">Jan+</div>
+        </div>
+      </div>
+
+      <div class="gantt-row">
+        <div class="g-label">R01 – Retentativas<small>#53970 · Concluído</small></div>
+        <div class="g-track">
+          <div class="g-bar done" style="left:0%;width:15%">Deploy 19/02</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R05 – Recorrência<small>#52984 · Concluído</small></div>
+        <div class="g-track">
+          <div class="g-bar done" style="left:3%;width:16%">Deploy 03/03</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R07 – Relatórios RM<small>#52983 · Concluído</small></div>
+        <div class="g-track">
+          <div class="g-bar done" style="left:5%;width:15%">Deploy 06/03</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R14 – Obrig. Rescisórias<small>#53965 · Fix 10/06</small></div>
+        <div class="g-track">
+          <div class="g-bar warn" style="left:29%;width:11%">Fix 10/06</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R18 – Boleto aos Pais<small>#53966 · Deploy 09/06</small></div>
+        <div class="g-track">
+          <div class="g-bar active" style="left:29%;width:10%">Deploy 09/06</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">RM 2.0 R07 – Planilhas<small>#53968 · Backlog</small></div>
+        <div class="g-track">
+          <div class="g-bar backlog" style="left:37%;width:16%">Escopo a definir</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R19 – Controles Internos<small>#53971 · Backlog</small></div>
+        <div class="g-track">
+          <div class="g-bar backlog" style="left:41%;width:25%">Rydoo + OCR + fiscal</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R05 – Refat. O2C NDs<small>#53969 · ~3 meses</small></div>
+        <div class="g-track">
+          <div class="g-bar backlog2" style="left:45%;width:24%">5 sprints · R$ 32.867</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R07 – Refat. Inventário<small>Backlog · ~3 meses</small></div>
+        <div class="g-track">
+          <div class="g-bar backlog2" style="left:54%;width:24%">5 sprints · R$ 44.934</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="g-label">R01 – Refatoração completa<small>#53972 · ~4 meses</small></div>
+        <div class="g-track">
+          <div class="g-bar backlog2" style="left:62%;width:34%">7 sprints · R$ 93.096 · até Jan+</div>
+          <div class="g-today" style="left:33%"></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 6px 14px 2px; font-size: 10px; color: var(--sdx-text2);">
+      ◂ Linha vermelha = hoje (Jun/2026) · Datas de backlog são estimativas baseadas nas propostas aprovadas
+    </div>
+  </div>
+
+  <div class="db-section">
+    <div class="section-title">Backlog priorizado</div>
+    <div class="backlog-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Automação</th>
+            <th>Escopo</th>
+            <th>Sprints</th>
+            <th>Proposta</th>
+            <th>Área</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#53972</td>
+            <td><strong>R01 – Refatoração completa</strong><br><span style="color:var(--sdx-text2);font-size:10px">Dispatcher + robôs especializados</span></td>
+            <td>State Machine → modular + filas</td>
+            <td>7</td>
+            <td><span class="val-chip">R$ 93.096</span></td>
+            <td>Finance</td>
+          </tr>
+          <tr>
+            <td>#53969</td>
+            <td><strong>R05 – Refat. O2C NDs</strong><br><span style="color:var(--sdx-text2);font-size:10px">Notas Débito/Crédito</span></td>
+            <td>Ivanti + SAP + PDFs + e-mails</td>
+            <td>5</td>
+            <td><span class="val-chip">R$ 32.867</span></td>
+            <td>Corporate</td>
+          </tr>
+          <tr>
+            <td>–</td>
+            <td><strong>R07 – Refat. Inventário Ativos Fixos</strong></td>
+            <td>R2R: SAP, relatórios, baixas, cobranças</td>
+            <td>5</td>
+            <td><span class="val-chip">R$ 44.934</span></td>
+            <td>Finance</td>
+          </tr>
+          <tr>
+            <td>#53971</td>
+            <td><strong>R19 – Controles Internos</strong><br><span style="color:var(--sdx-text2);font-size:10px">Monitoramento despesas</span></td>
+            <td>Rydoo + OCR + API fiscal + fraudes</td>
+            <td>–</td>
+            <td><span class="val-chip">A definir</span></td>
+            <td>Offshore</td>
+          </tr>
+          <tr>
+            <td>#53968</td>
+            <td><strong>RM 2.0 R07 – Planilhas de Controle</strong></td>
+            <td>Escrita incremental por chamado</td>
+            <td>–</td>
+            <td><span class="val-chip">A definir</span></td>
+            <td>Finance</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="db-section">
+    <div class="section-title">Próximos passos e ações pendentes</div>
+    <div class="next-steps">
+      <div class="step-item">
+        <div class="step-dot dot-red">1</div>
+        <div class="step-text"><strong>R14 – Correção Jundiaí:</strong> ajuste do seletor de login (novo botão) — <em>prazo 10/06</em>. Testar em PRD antes do deploy final.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot dot-red">2</div>
+        <div class="step-text"><strong>R18 – Liberações pendentes:</strong> finalizar parametrização da nova VM pela TCS + liberar conta NL Web em PRD — <em>gate para deploy 09/06</em>.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot dot-blue">3</div>
+        <div class="step-text"><strong>R01 Refatoração:</strong> proposta aprovada (R$ 93.096 / 7 sprints). Agendar kick-off e definir sprint 1.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot dot-blue">4</div>
+        <div class="step-text"><strong>R05 e R07 Refatorações:</strong> aguardam alinhamento de datas com cliente. Acionar para planejamento Q3.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot dot-navy">5</div>
+        <div class="step-text"><strong>R19 e RM 2.0 R07:</strong> iniciar definição de escopo e estimativa com a área de negócio.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-dot dot-navy">6</div>
+        <div class="step-text"><strong>Intake de demandas:</strong> com workshop realizado, formalizar canal de recebimento de novas automações identificadas.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="db-footer">
+    <span>Insi — Digital. Simple. Human.</span>
+    <strong>Sodexo Brasil · 2026</strong>
+  </div>
+
+</div>
